@@ -19,10 +19,10 @@ public class GameRunner implements KeyListener{
 		Maze m = new Maze(MAZE_DIMENSION, MAZE_DIMENSION);
 		model = m.getMaze();
     	view = new GameView(model);
-//    	player = new Player(model[(int) (MAZE_DIMENSION * Math.random())][(int) (MAZE_DIMENSION * Math.random())]);
-    	Node[] nArr = m.addEntity(NodeType.player, 1);
-    	player = new Player(nArr[0]);
-    	eManager = new EnemyManager(model, ENEMY_COUNT, MAZE_DIMENSION);
+    	Node[] pArr = m.addEntity(NodeType.player, 1);
+    	player = new Player(pArr[0]);
+    	Node[] eArr = m.addEntity(NodeType.enemy, ENEMY_COUNT);
+    	eManager = new EnemyManager(eArr, ENEMY_COUNT, MAZE_DIMENSION);
     	Thread vut = new Thread(new ViewUpdater(view, 30, player));
     	vut.start();
     	
@@ -67,7 +67,7 @@ public class GameRunner implements KeyListener{
         	view.toggleZoom();
         }
         else if (e.getKeyCode() == KeyEvent.VK_X){
-        	itemOperation(player.getInventory().getItem());
+        	itemOperation(player.getInventory().useItem());
         }
         else{
         	return;
@@ -84,10 +84,10 @@ public class GameRunner implements KeyListener{
 		{
 			case bomb:
 				System.out.println("Bomb used");
-				Traverser aS = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy);
+				Traverser aS = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy, 20);
 				Node found = aS.traverse(player.getNode());
 				try {
-				eManager.getEnemy(found).kill();
+					eManager.getEnemy(found).kill();
 				}
 				catch(Exception e) {
 					System.out.println("Enemy not found");
@@ -97,14 +97,22 @@ public class GameRunner implements KeyListener{
 				
 			case hBomb: 
 				System.out.println("hBomb used");
-				for (int i = 0; i < model.length; i++) {
-					
+				aS = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy, 40);
+				found = aS.traverse(player.getNode());
+				try {
+					eManager.getEnemy(found).kill();
 				}
+				catch(Exception e) {
+					System.out.println("Enemy not found");
+				}
+				eManager.getAliveEnemies();
+				break;
 				
 			case help:
 				System.out.println("help used");
 				eManager.getAliveEnemies();
 				player.setStamina(50);
+//				aS = new AStar();
 				break;
 				
 			default:
@@ -113,8 +121,10 @@ public class GameRunner implements KeyListener{
 	}
 	
 	private boolean isValidMove(int r, int c) {
-		if(player.getStamina() <= 0)
-			return false;
+		if(player.getStamina() <= 0) {
+			player.getNode().setNodeType(NodeType.space);
+			return false;			
+		}
 		
 		if(model[r][c].getNodeType() == NodeType.space) {
 			model[player.getRow()][player.getCol()].setNodeType(NodeType.space);

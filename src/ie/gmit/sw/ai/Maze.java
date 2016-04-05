@@ -2,6 +2,8 @@ package ie.gmit.sw.ai;
 
 public class Maze {
 	private Node[][] maze;
+	private Node goal;
+	
 	public Maze(int rows, int cols){
 		maze = new Node[rows][cols];
 		init();

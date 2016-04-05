@@ -23,6 +23,12 @@ public class Inventory {
 		return weaponState;
 	}
 	
+	public NodeType useItem() {
+		NodeType i = item;
+		item = NodeType.wall;
+		return i;
+	}
+	
 	public NodeType getItem() {
 		return item;
 	}
@@ -34,16 +40,5 @@ public class Inventory {
 		else
 			item = NodeType.wall;
 		return state;
-	}
-	
-	public NodeType use() {
-		NodeType curItem = item;
-		item = NodeType.wall;
-		//Uses item held.
-		// Bomb - DFS deal damage of 20(?) steps
-		// H-Bomb - deal heavier damage with A* search?
-		
-		// Return the character and do something in GameRunner?
-		return curItem;
 	}
 }

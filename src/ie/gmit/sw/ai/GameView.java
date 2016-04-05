@@ -9,7 +9,7 @@ import javax.swing.*;
 public class GameView extends JPanel implements ActionListener{
 	private static final long serialVersionUID = 1L;
 	public static final int DEFAULT_VIEW_SIZE = 800;	
-	private static final int IMAGE_COUNT = 9;
+	private static final int IMAGE_COUNT = 10;
 	private int cellspan = 5;	
 	private int cellpadding = 2;
 	private Node[][] maze;
@@ -108,7 +108,9 @@ public class GameView extends JPanel implements ActionListener{
         			imageIndex = 7;
         		}else if (ch == NodeType.goal) {
         			imageIndex = 8;
-        		}else{
+        		}else if (ch == NodeType.hint) {
+        			imageIndex = 8;
+        		}else{        		
         			imageIndex = -1;
         		}
         		
@@ -152,5 +154,6 @@ public class GameView extends JPanel implements ActionListener{
 		images[6] = ImageIO.read(new java.io.File("src/resources/spider_up.png"));
 		images[7] = ImageIO.read(new java.io.File("src/resources/player.png"));
 		images[8] = ImageIO.read(new java.io.File("src/resources/trophy.png"));
+		images[9] = ImageIO.read(new java.io.File("src/resources/hint.png"));
 	}
 }

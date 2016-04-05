@@ -4,28 +4,20 @@ public class EnemyManager {
 	private Thread[] threadArr;
 	private Enemy[] enemyArr;
 	
-	public EnemyManager(Node[][] maze, int enemyCount, int dimension) {
+	public EnemyManager(Node[] nodes, int enemyCount, int dimension) {
 		threadArr = new Thread[enemyCount];
 		enemyArr = new Enemy[enemyCount];
-		createEnemies(maze, enemyCount, dimension);
-	}
-
-	private void createEnemies(Node[][] maze, int enemies, int dimension) {
-		for (int i = 0; i < enemies; i++) {
-//			enemyArr[i] = new Enemy(maze, (int) (dimension * Math.random()), (int) (dimension * Math.random()));
-			enemyArr[i] = new Enemy(maze[(int) (dimension * Math.random())][(int) (dimension * Math.random())]);
-			threadArr[i] = new Thread(enemyArr[i]);
-			threadArr[i].start();
-		}
+		createEnemies(nodes);
 	}
 	
-//	public Enemy getEnemy(int row, int column) {
-//		for(Enemy enemy : enemyArr)
-//			if(enemy.getRow() == row && enemy.getCol() == column)
-//				return enemy;
-//		
-//		return null;
-//	}
+	private void createEnemies(Node[] nodes) {
+		for (int i = 0; i < enemyArr.length; i++) {
+			enemyArr[i] = new Enemy(nodes[i]);
+			threadArr[i] = new Thread(enemyArr[i]);
+			threadArr[i].start();
+			System.out.println("Enemy at " + enemyArr[i].getNode().toString());
+		}
+	}
 	
 	public Enemy getEnemy(Node n) {
 		for (Enemy e : enemyArr) {
@@ -40,7 +32,6 @@ public class EnemyManager {
 	
 	public Enemy getEnemy(int i) {
 		for (int j = i - 1; j < enemyArr.length - 1; j++) 
-//			if (enemyArr[j].getHealth() > 0) 
 			if(enemyArr[j].isAlive())
 				return enemyArr[j];
 		

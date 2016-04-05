@@ -9,17 +9,19 @@ import ie.gmit.sw.ai.NodeType;
 public class AStar implements Traverser{
 	private Node goal;
 	private NodeType nType;
+	private int steps;
 	
-	public AStar(Node goal, NodeType nType) {
+	public AStar(Node goal, NodeType nType, int steps) {
 		this.goal = goal;
 		this.nType = nType;
+		this.steps = steps;
 	}
 
 	public Node traverse(Node node) { // H-Bomb search, guaranteed to find and kill one enemy
 		
 //		int visitCount = 0;
     	
-		PriorityQueue<Node> open = new PriorityQueue<Node>(20, (Node current, Node next) -> (current.getPathCost() + current.getHeuristic(goal)) - (next.getPathCost() + next.getHeuristic(goal)));
+		PriorityQueue<Node> open = new PriorityQueue<Node>(steps, (Node current, Node next) -> (current.getPathCost() + current.getHeuristic(goal)) - (next.getPathCost() + next.getHeuristic(goal)));
 		java.util.List<Node> closed = new ArrayList<Node>();
 	
 		open.offer(node);
