@@ -22,11 +22,13 @@ public class GameView extends JPanel implements ActionListener{
 	private int imageIndex = -1;
 	private int stamina;
 	private int weaponState;
+	private String item;
+	private boolean win = false;
 	
 	public GameView(Node[][] maze) throws Exception{
 		init();
 		this.maze = maze;
-		setBackground(Color.GRAY);
+		setBackground(Color.WHITE);
 		setDoubleBuffered(true);
 		timer = new Timer(300, this);
 		timer.start();
@@ -74,20 +76,57 @@ public class GameView extends JPanel implements ActionListener{
         				g2.fillRect(x1, y1, size, size);
         				continue;
         			}
+//        			if(ch == NodeType.enemy) {
+//        				g2.setColor(Color.RED);
+//        			}
+//        			
+//        			else if(ch == NodeType.player) {
+//        				g2.setColor(Color.WHITE);
+//        			}
+//        			
+//        			else if(ch == NodeType.goal) {
+//        				g2.setColor(Color.CYAN);
+//        			}
+//    				g2.fillRect(x1, y1, size, size);
+//    				continue;
+        			
+        			
         		}else{
-        			ch = maze[currentRow - cellpadding + row][currentCol - cellpadding + col].getNodeType();
-        	        g2.setColor(Color.DARK_GRAY);
-        	        g2.fillRect(10, 10, 300, 70);
-        	        g2.setColor(Color.WHITE);
-        	        g2.drawString("Stamina", 20, 30);
-        	        g2.drawString("Weapon", 20, 65);
-        	        g2.setColor(Color.BLACK);
-        	        g2.fillRect(75, 15, 210, 20);
-        	        g2.fillRect(75, 50, 100, 20);
-        	        g2.setColor(Color.GREEN);
-        	        g2.fillRect(80, 20, stamina, 10);        	        
-        	        g2.setColor(Color.LIGHT_GRAY);
-        	        g2.fillRect(80, 55, weaponState, 10);
+        			if(win) {
+        				g2.setColor(Color.BLACK);
+        				g2.fillRect(150, 350, 500, 100);
+        				g2.setColor(Color.GREEN);
+        				g2.drawString("YOU KEPT IT COUNTRY", 350, 400);
+        				g2.setColor(Color.WHITE);
+        				g2.drawString("Thanks for playing!", 355, 420);
+        				
+        			}
+        			
+        			else if (stamina > 0) {
+	        			ch = maze[currentRow - cellpadding + row][currentCol - cellpadding + col].getNodeType();
+	        	        g2.setColor(Color.DARK_GRAY);
+	        	        g2.fillRect(10, 10, 300, 105);
+	        	        g2.setColor(Color.WHITE);
+	        	        g2.drawString("Stamina", 20, 30);
+	        	        g2.drawString("Weapon", 20, 65);
+	        	        g2.drawString("Item | " + item, 20, 96);
+	        	        g2.setColor(Color.BLACK);
+	        	        g2.fillRect(75, 15, 210, 20);
+	        	        g2.fillRect(75, 50, 100, 20);
+	        	        g2.setColor(Color.GREEN);
+	        	        g2.fillRect(80, 20, stamina, 10);        	        
+	        	        g2.setColor(Color.LIGHT_GRAY);
+	        	        g2.fillRect(80, 55, weaponState, 10);
+        			}
+        			else if (stamina <= 0){
+        				g2.setColor(Color.BLACK);
+        				g2.fillRect(150, 350, 500, 100);
+        				g2.setColor(Color.RED);
+        				g2.drawString("YOU DIED", 370, 400);
+        				g2.setColor(Color.WHITE);
+        				g2.drawString("Thanks for playing!", 350, 420);
+        			}
+        			
         	        
         		}
         		
@@ -109,7 +148,7 @@ public class GameView extends JPanel implements ActionListener{
         		}else if (ch == NodeType.goal) {
         			imageIndex = 8;
         		}else if (ch == NodeType.hint) {
-        			imageIndex = 8;
+        			imageIndex = 9;
         		}else{        		
         			imageIndex = -1;
         		}
@@ -117,11 +156,15 @@ public class GameView extends JPanel implements ActionListener{
         		if (imageIndex >= 0){
         			g2.drawImage(images[imageIndex], x1, y1, null);
         		}else{
-        			g2.setColor(Color.GRAY);
+        			g2.setColor(Color.WHITE);
         			g2.fillRect(x1, y1, size, size);
         		}      		
         	}
         }
+	}
+	
+	public void win() {
+		win = true;
 	}
 	
 	public void toggleZoom(){
@@ -137,10 +180,26 @@ public class GameView extends JPanel implements ActionListener{
 		this.repaint();
 	}
 	
-	public void setStats(int stamina, int weaponState) {
+	public void setStats(int stamina, int weaponState, NodeType item) {
 		this.stamina = stamina;
-//		int ws = (int) weaponState * 30;
 		this.weaponState = weaponState * 30;
+		
+		switch(item) {
+		case bomb:
+			this.item = "Bomb";
+			break;
+			
+		case hBomb:
+			this.item = "Hydrogen Bomb";
+			break;
+			
+		case wall:
+			this.item = "None";
+			break;
+			
+		default:
+			this.item = "None";
+		}
 	}
 	
 	private void init() throws Exception{

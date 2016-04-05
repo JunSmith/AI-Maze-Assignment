@@ -17,7 +17,7 @@ public class AStar implements Traverser{
 		this.steps = steps;
 	}
 
-	public Node traverse(Node node) { // H-Bomb search, guaranteed to find and kill one enemy
+	public Node traverse(Node node) { 
 		
 //		int visitCount = 0;
     	
@@ -30,10 +30,11 @@ public class AStar implements Traverser{
 			node = open.poll();
 			closed.add(node);
 			node.SetVisited(true);
+//			node.setNodeType(NodeType.hint);
 //			visitCount++;
 			
-//			if(node.is(goal)) {
-			if(node.getNodeType() == nType) {
+			if(node.is(goal)) {
+//			if(node.getNodeType() == nType) {
 				System.out.println("Goal found");
 				return goal;
 			}
@@ -50,6 +51,7 @@ public class AStar implements Traverser{
 					}else{
 						open.remove(n);
 						closed.remove(n);
+						n.SetVisited(false);
 						n.setParent(node);
 						n.setPathCost(node.getPathCost() + 1);
 						open.add(n);

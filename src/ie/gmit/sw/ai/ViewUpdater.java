@@ -19,12 +19,13 @@ public class ViewUpdater implements Runnable {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}while(player.getStamina() > 0);
+//		}while(player.getStamina() > 0);
+		}while(true);
 	}
 	
 	public void updateView() {
 		view.setCurrentRow(player.getNode().getRow());
 		view.setCurrentCol(player.getNode().getCol());
-		view.setStats(player.getStamina(), player.getInventory().getWeaponState());
+		view.setStats(player.getStamina(), player.getInventory().getWeaponState(), player.getInventory().getItem());
 	}
 }

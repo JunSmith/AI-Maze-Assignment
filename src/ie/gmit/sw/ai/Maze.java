@@ -19,7 +19,10 @@ public class Maze {
 		addFeature(NodeType.help, NodeType.wall, featureNumber);
 		addFeature(NodeType.bomb, NodeType.wall, featureNumber);
 		addFeature(NodeType.hBomb, NodeType.wall, featureNumber);
-		addFeature(NodeType.goal, NodeType.space, 1);
+//		addFeature(NodeType.goal, NodeType.space, 1);
+		
+		Node[] gArr = addEntity(NodeType.goal, 1);
+		goal = gArr[0];
 	}
 	
 	private void resetVisits() {
@@ -71,6 +74,10 @@ public class Maze {
 		}
 		
 		return entArr;
+	}
+	
+	public Node getGoal() {
+		return goal;
 	}
 	
 	private void build(Node curNode) {

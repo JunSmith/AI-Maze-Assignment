@@ -5,8 +5,7 @@ import java.util.Random;
 import ie.gmit.sw.traverser.RandomWalk;
 import ie.gmit.sw.traverser.Traverser;
 
-public class Enemy implements Runnable
-{
+public class Enemy implements Runnable {
 	private Node node;
 	private boolean isAlive;
 	
@@ -30,7 +29,6 @@ public class Enemy implements Runnable
 			
 			node = traverser.traverse(node);
 		}while(isAlive);
-		System.out.println("Kill at " + node.getRow() + " " + node.getCol());
 		node.setNodeType(NodeType.space);
 		return;
 	}

@@ -14,13 +14,17 @@ public class GameRunner implements KeyListener{
 	private GameView view;
 	private EnemyManager eManager;
 	private Player player;
+	private Maze m;
 	
 	public GameRunner() throws Exception{
-		Maze m = new Maze(MAZE_DIMENSION, MAZE_DIMENSION);
+		m = new Maze(MAZE_DIMENSION, MAZE_DIMENSION);
 		model = m.getMaze();
     	view = new GameView(model);
     	Node[] pArr = m.addEntity(NodeType.player, 1);
     	player = new Player(pArr[0]);
+//    	Node p = m.getGoal();
+//    	p.setCol(m.getGoal().getCol() + 3);
+//    	player = new Player(p);
     	Node[] eArr = m.addEntity(NodeType.enemy, ENEMY_COUNT);
     	eManager = new EnemyManager(eArr, ENEMY_COUNT, MAZE_DIMENSION);
     	Thread vut = new Thread(new ViewUpdater(view, 30, player));
@@ -34,6 +38,7 @@ public class GameRunner implements KeyListener{
     	JFrame f = new JFrame("G00302135 - B.Sc. in Computing (Software Development)");
     	
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
         f.addKeyListener(this);
         f.getContentPane().setLayout(new FlowLayout());
         f.add(view);
@@ -72,8 +77,6 @@ public class GameRunner implements KeyListener{
         else{
         	return;
         }
-        
-//        System.out.println(player.getRow() + " " + player.getCol());
     }
     public void keyReleased(KeyEvent e) {} //Ignore
 	public void keyTyped(KeyEvent e) {} //Ignore
@@ -84,10 +87,10 @@ public class GameRunner implements KeyListener{
 		{
 			case bomb:
 				System.out.println("Bomb used");
-				Traverser aS = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy, 20);
-				Node found = aS.traverse(player.getNode());
+				Traverser asb = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy, 20);
+				Node bFound = asb.traverse(player.getNode());
 				try {
-					eManager.getEnemy(found).kill();
+					eManager.getEnemy(bFound).kill();
 				}
 				catch(Exception e) {
 					System.out.println("Enemy not found");
@@ -97,10 +100,10 @@ public class GameRunner implements KeyListener{
 				
 			case hBomb: 
 				System.out.println("hBomb used");
-				aS = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy, 40);
-				found = aS.traverse(player.getNode());
+				Traverser ash = new AStar(eManager.getEnemy(1).getNode(), NodeType.enemy, 40);
+				Node hFound = ash.traverse(player.getNode());
 				try {
-					eManager.getEnemy(found).kill();
+					eManager.getEnemy(hFound).kill();
 				}
 				catch(Exception e) {
 					System.out.println("Enemy not found");
@@ -112,7 +115,10 @@ public class GameRunner implements KeyListener{
 				System.out.println("help used");
 				eManager.getAliveEnemies();
 				player.setStamina(50);
-//				aS = new AStar();
+				Traverser asHelp = new AStar(m.getGoal(), NodeType.goal, 100);
+				Node helpFound = asHelp.traverse(player.getNode());
+				if(helpFound.getNodeType() == NodeType.goal)
+					System.out.println("Found");
 				break;
 				
 			default:
@@ -121,16 +127,17 @@ public class GameRunner implements KeyListener{
 	}
 	
 	private boolean isValidMove(int r, int c) {
-		if(player.getStamina() <= 0) {
-			player.getNode().setNodeType(NodeType.space);
-			return false;			
-		}
 		
 		if(model[r][c].getNodeType() == NodeType.space) {
 			model[player.getRow()][player.getCol()].setNodeType(NodeType.space);
 			model[r][c].setNodeType(NodeType.player);
 			player.setStamina(-1);
 			return true;
+		}
+		
+		else if(model[r][c].getNodeType() == NodeType.goal) {
+			view.win();
+			return false;
 		}
 		
 		else {

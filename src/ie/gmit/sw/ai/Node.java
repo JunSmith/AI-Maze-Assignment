@@ -50,7 +50,6 @@ public class Node {
 	
 	public void SetVisited(boolean v) {
 		this.visited = v;
-//		nodeType = NodeType.space;
 	}
 	
 	public boolean isVisited() {
@@ -65,7 +64,7 @@ public class Node {
 			nl.add(maze[row - steps][col]);
 			count++;
 		}
-		if(row < maze.length - steps - 1){
+		if(row < maze.length - steps ){
 			nl.add(maze[row + steps][col]);
 			count++;
 		}
@@ -73,7 +72,7 @@ public class Node {
 			nl.add(maze[row][col - steps]);
 			count++;
 		}
-		if(col < maze.length - steps -1) {
+		if(col < maze.length - steps ) {
 			nl.add(maze[row][col + steps]);
 			count++;
 		}
