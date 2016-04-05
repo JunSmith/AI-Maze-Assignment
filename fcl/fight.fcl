@@ -1,0 +1,45 @@
+FUNCTION_BLOCK Fight
+
+	VAR_INPUT		
+		stamina : REAL;
+		weapon : REAL;
+	END_VAR
+	
+	VAR_OUTPUT
+		damage : REAL;
+	END_VAR
+	
+	FUZZIFY stamina 
+		TERM low := (0, 1) (60, 1) (120, 0);
+		TERM medium := trian 50 110 180;
+		TERM high := (100, 0) (160, 1) (200, 1);
+	END_FUZZIFY
+	 
+	FUZZIFY weapon 
+		TERM none := 0;
+		TERM damaged := 1;
+		TERM worn := 2;
+		TERM new := 3;
+	END_FUZZIFY
+	
+	DEFUZZIFY damage 
+		TERM low := (0, 1)  (25, 0);
+		TERM medium := trian 15 25 35;
+		TERM high := (25, 0)  (50, 1);
+		METHOD : COG;
+		DEFAULT := 0; 
+	END_DEFUZZIFY
+	
+	RULEBLOCK No1 
+	   AND : MIN;
+	   ACT : MIN;
+	   ACCU : MAX;
+	   RULE 1 : IF stamina IS low OR weapon IS new THEN damage IS low;
+	   RULE 2 : IF stamina IS medium OR weapon IS worn THEN damage IS medium;
+	   Rule 3 : IF stamina IS high AND weapon IS damaged THEN damage IS high;
+	   RULE 4 : IF stamina IS high OR weapon IS none THEN damage IS medium;
+	   RULE 5 : IF weapon IS none THEN damage IS high;
+	   RULE 6 : IF weapon IS new THEN damage IS low;
+	END_RULEBLOCK
+
+END_FUNCTION_BLOCK
