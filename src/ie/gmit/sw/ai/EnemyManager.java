@@ -15,7 +15,6 @@ public class EnemyManager {
 			enemyArr[i] = new Enemy(nodes[i]);
 			threadArr[i] = new Thread(enemyArr[i]);
 			threadArr[i].start();
-			System.out.println("Enemy at " + enemyArr[i].getNode().toString());
 		}
 	}
 	
@@ -46,7 +45,6 @@ public class EnemyManager {
 			if(e.isAlive())
 				count++;		
 		
-		System.out.println(count + " Enemies alive");
 		return count;
 	}
 	

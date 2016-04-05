@@ -45,12 +45,6 @@ public class Player
 		this.stamina += change;
 		if(stamina > 200) 
 			stamina = 200;
-		System.out.println(node.getRow() + " " + node.getCol());
-		
-		if(stamina <= 0) {
-			System.out.println("You have died");
-			node.setNodeType(NodeType.space);
-		}
 	}
 	
 	public Node getNode() {

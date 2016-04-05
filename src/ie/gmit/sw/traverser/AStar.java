@@ -8,18 +8,14 @@ import ie.gmit.sw.ai.NodeType;
 
 public class AStar implements Traverser{
 	private Node goal;
-	private NodeType nType;
 	private int steps;
 	
-	public AStar(Node goal, NodeType nType, int steps) {
+	public AStar(Node goal, int steps) {
 		this.goal = goal;
-		this.nType = nType;
 		this.steps = steps;
 	}
 
 	public Node traverse(Node node) { 
-		
-//		int visitCount = 0;
     	
 		PriorityQueue<Node> open = new PriorityQueue<Node>(steps, (Node current, Node next) -> (current.getPathCost() + current.getHeuristic(goal)) - (next.getPathCost() + next.getHeuristic(goal)));
 		java.util.List<Node> closed = new ArrayList<Node>();
@@ -30,15 +26,10 @@ public class AStar implements Traverser{
 			node = open.poll();
 			closed.add(node);
 			node.SetVisited(true);
-//			node.setNodeType(NodeType.hint);
-//			visitCount++;
 			
 			if(node.is(goal)) {
-//			if(node.getNodeType() == nType) {
-				System.out.println("Goal found");
 				return goal;
 			}
-//			node.setNodeType(NodeType.goal);
 			
 			Node[] adjacents = node.getAdjacents(1);
 			for(Node n : adjacents) {
